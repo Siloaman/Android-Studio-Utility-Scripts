@@ -1,0 +1,49 @@
+// create an object textToSpeech and adding features into it
+        textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int i) {
+
+                // if No error is found then only it will run
+                if(i!=TextToSpeech.ERROR){
+                    // To Choose language of speech
+                    textToSpeech.setLanguage(Locale.UK);
+                }
+
+                textToSpeech.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                    @Override
+                    public void onStart(String utteranceId) {
+
+                    }
+
+                    @Override
+                    public void onDone(String utteranceId) {
+                        TTS_On_Loop(paragraph_counter);
+                    }
+
+                    @Override
+                    public void onError(String utteranceId) {
+
+                    }
+
+                });
+
+
+            }
+
+====================================================================================================
+
+public void TTS_On_Loop(int round){
+
+        String mostRecentUtteranceID = "continue_reading";
+
+        HashMap<String, String> params = new HashMap<>();
+        params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, mostRecentUtteranceID);
+
+        if(paragraph_counter < article_paragraphs.size()) {
+            String speechify = article_paragraphs.get(paragraph_counter);
+            paragraph_counter++;
+            textToSpeech.speak(speechify.toString(), TextToSpeech.QUEUE_FLUSH, params);
+            // UtteranceProgressListener needs needs utteranceId (params) to activate onDone()
+        }
+
+    }
